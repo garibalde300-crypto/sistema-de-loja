@@ -1,505 +1,1023 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PROJETO FINAL SENAC — Painel & Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --primary: #06b6d4;
-      --primary-hover: #0891b2;
-      --success: #10b981;
-      --danger: #ef4444;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTROLIS - Sistema Integrado Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            padding: 20px;
+        }
 
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      padding: 30px 20px;
-    }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 15px;
+        }
 
-    .container { max-width: 1280px; margin: 0 auto; }
+        .logo-box {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--card-border);
-    }
+        .logo-box span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
 
-    .logo-area { display: flex; align-items: center; gap: 14px; }
-    .logo-icon {
-      background: linear-gradient(135deg, var(--primary), #3b82f6);
-      color: white;
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
+        .title-container h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+        }
 
-    h1 { font-size: 1.8rem; font-weight: 800; color: #fff; }
+        .title-container p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
 
-    .badge-status {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #34d399;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .pulse { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+        .nav-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #38bdf8;
+            margin: 15px 0 8px 5px;
+            font-weight: bold;
+        }
 
-    .main-layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 24px;
-    }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-bottom: 10px;
+        }
 
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      align-content: start;
-    }
+        .card-action {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            text-align: center;
+        }
 
-    .action-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+        .card-action:hover, .card-action.active {
+            transform: translateY(-2px);
+            border-color: #38bdf8;
+            background-color: #273548;
+        }
 
-    .action-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-3px);
-      background: #24334d;
-    }
+        .card-action span {
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+        }
 
-    .action-icon { font-size: 2rem; margin-bottom: 8px; }
-    .action-title { font-size: 0.85rem; font-weight: 700; color: #e2e8f0; }
+        .section-container {
+            display: none;
+        }
 
-    .dashboard-panel { display: flex; flex-direction: column; gap: 24px; }
-    .forms-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
+        .section-container.active {
+            display: block;
+        }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 24px; border-radius: 20px; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .main-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
 
-    form { display: flex; flex-direction: column; gap: 12px; }
-    input { background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 10px; font-size: 0.9rem; }
-    input:focus { outline: none; border-color: var(--primary); }
+        .main-card h3 {
+            font-size: 16px;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    button { border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
-    .btn-primary { background: var(--primary); color: #000; }
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-success { background: var(--success); color: #fff; }
-    .btn-danger { background: var(--danger); color: #fff; padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; }
-    .btn-danger:hover { background: #dc2626; }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th { background: #0f172a; text-align: left; padding: 14px 20px; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--card-border); }
-    td { padding: 16px 20px; border-bottom: 1px solid var(--card-border); font-size: 0.95rem; }
-    .stock-badge { background: rgba(6, 182, 212, 0.15); color: var(--primary); border: 1px solid rgba(6, 182, 212, 0.3); padding: 4px 10px; border-radius: 8px; font-weight: 700; }
+        .form-group {
+            margin-bottom: 10px;
+        }
 
-    /* Modais */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 30px;
-      border-radius: 20px;
-      width: 600px;
-      max-width: 90%;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-  </style>
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #38bdf8;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 5px;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            font-size: 12px;
+        }
+
+        th {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .sum-card {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .sum-card h4 {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 3px;
+        }
+
+        .sum-card p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <div class="logo-area">
-        <div class="logo-icon">📊</div>
-        <div>
-          <h1>PROJETO FINAL SENAC</h1>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Painel de Gestão e Controle de Operações</p>
+    <div class="header">
+        <div class="logo-box"><span>📊</span></div>
+        <div class="title-container">
+            <h1>CONTROLIS</h1>
+            <p>Sistema Comercial, Financeiro e Gerencial Integrado</p>
         </div>
-      </div>
-      <div class="badge-status">
-        <div class="pulse"></div> Sistema Conectado
-      </div>
-    </header>
+    </div>
 
-    <div class="main-layout">
-      <div class="quick-actions">
-        <div class="action-card" id="btn-novo-produto">
-          <div class="action-icon">📝</div>
-          <div class="action-title">Novo Produto</div>
-        </div>
-        <div class="action-card" id="btn-nova-venda">
-          <div class="action-icon">💳</div>
-          <div class="action-title">Nova Venda</div>
-        </div>
-        <div class="action-card" id="btn-clientes">
-          <div class="action-icon">👥</div>
-          <div class="action-title">Clientes</div>
-        </div>
-        <div class="action-card" id="btn-estoque">
-          <div class="action-icon">📦</div>
-          <div class="action-title">Estoque</div>
-        </div>
-        <div class="action-card" id="btn-relatorios">
-          <div class="action-icon">📑</div>
-          <div class="action-title">Relatórios</div>
-        </div>
-        <div class="action-card" id="btn-ajustes">
-          <div class="action-icon">⚙️</div>
-          <div class="action-title">Ajustes</div>
-        </div>
-      </div>
+    <!-- Navegação por Módulos -->
+    <div class="nav-section-title">Cadastros Básicos</div>
+    <div class="dashboard-grid">
+        <div class="card-action active" onclick="switchTab('clientes', this)"><span>👥 Clientes</span></div>
+        <div class="card-action" onclick="switchTab('produtos', this)"><span>📦 Produtos</span></div>
+        <div class="card-action" onclick="switchTab('fornecedores', this)"><span>🏢 Fornecedores</span></div>
+        <div class="card-action" onclick="switchTab('funcionarios', this)"><span>👨‍💼 Funcionários</span></div>
+        <div class="card-action" onclick="switchTab('categorias', this)"><span>🗂️ Categorias</span></div>
+        <div class="card-action" onclick="switchTab('marcas', this)"><span>🏷️ Marcas</span></div>
+    </div>
 
-      <div class="dashboard-panel">
-        <div class="forms-grid">
-          <div class="card" id="card-produto">
-            <div class="card-title">📦 Cadastrar Item</div>
-            <form id="form-produto">
-              <input type="text" id="p-nome" placeholder="Nome do Produto" required>
-              <input type="number" step="0.01" id="p-preco" placeholder="Preço (R$)" required>
-              <input type="number" id="p-qtd" placeholder="Qtd. Inicial" required>
-              <button type="submit" class="btn-primary">Adicionar ao Banco</button>
+    <div class="nav-section-title">Operações e Movimentações</div>
+    <div class="dashboard-grid">
+        <div class="card-action" onclick="switchTab('vendas', this)"><span>🛍️ Vendas</span></div>
+        <div class="card-action" onclick="switchTab('compras', this)"><span>🛒 Compras</span></div>
+        <div class="card-action" onclick="switchTab('estoque', this)"><span>🔄 Estoque</span></div>
+        <div class="card-action" onclick="switchTab('trocas', this)"><span>↩️ Trocas/Dev.</span></div>
+        <div class="card-action" onclick="switchTab('caixa', this)"><span>💵 Caixa</span></div>
+    </div>
+
+    <div class="nav-section-title">Módulo Financeiro</div>
+    <div class="dashboard-grid">
+        <div class="card-action" onclick="switchTab('pagar', this)"><span>📤 Contas Pagar</span></div>
+        <div class="card-action" onclick="switchTab('receber', this)"><span>📥 Contas Receber</span></div>
+        <div class="card-action" onclick="switchTab('crediario', this)"><span>💳 Crediário</span></div>
+        <div class="card-action" onclick="switchTab('fluxo', this)"><span>📈 Fluxo Caixa</span></div>
+    </div>
+
+    <div class="nav-section-title">Gestão e Sistema</div>
+    <div class="dashboard-grid">
+        <div class="card-action" onclick="switchTab('gestao', this)"><span>📊 Gestão</span></div>
+        <div class="card-action" onclick="switchTab('relatorios', this)"><span>📑 Relatórios</span></div>
+        <div class="card-action" onclick="switchTab('dashboard', this)"><span>🏠 Dashboard</span></div>
+        <div class="card-action" onclick="switchTab('usuarios', this)"><span>🔐 Usuários</span></div>
+        <div class="card-action" onclick="switchTab('configuracoes', this)"><span>⚙️ Configurações</span></div>
+    </div>
+
+    <!-- 1. Clientes -->
+    <div id="section-clientes" class="section-container active">
+        <div class="main-card">
+            <h3>👥 Cadastrar Cliente</h3>
+            <form onsubmit="cadastrarItem(event, 'clientes')">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome Completo</label><input type="text" id="cli-nome" class="form-control" required></div>
+                    <div class="form-group"><label>E-mail</label><input type="email" id="cli-email" class="form-control" required></div>
+                    <div class="form-group"><label>Telefone</label><input type="text" id="cli-tel" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Cliente</button>
             </form>
-          </div>
+        </div>
+        <div class="main-card">
+            <h3>Clientes Cadastrados</h3>
+            <table>
+                <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th></tr></thead>
+                <tbody id="tabela-clientes"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhum cliente cadastrado.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-          <div class="card" id="card-venda">
-            <div class="card-title">🛒 Lançar Venda</div>
-            <form id="form-venda">
-              <input type="number" id="v-id" placeholder="ID do Produto" required>
-              <input type="number" id="v-qtd" placeholder="Quantidade" required>
-              <button type="submit" class="btn-success">Confirmar Venda</button>
+    <!-- 2. Produtos -->
+    <div id="section-produtos" class="section-container">
+        <div class="main-card">
+            <h3>📦 Cadastrar Produto</h3>
+            <form onsubmit="cadastrarItem(event, 'produtos')">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome do Produto</label><input type="text" id="prod-nome" class="form-control" required></div>
+                    <div class="form-group"><label>Preço de Venda (R$)</label><input type="number" step="0.01" id="prod-preco" class="form-control" required></div>
+                    <div class="form-group"><label>Estoque Inicial</label><input type="number" id="prod-qtd" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Produto</button>
             </form>
-          </div>
         </div>
-
-        <div class="card" style="padding: 0; overflow: hidden;" id="secao-estoque">
-          <div style="padding: 20px 24px; border-bottom: 1px solid var(--card-border);">
-            <div class="card-title" style="margin: 0;">📋 Status do Estoque</div>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Produto</th>
-                <th>Preço</th>
-                <th>Disponível</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-produtos"></tbody>
-          </table>
+        <div class="main-card">
+            <h3>Produtos Cadastrados</h3>
+            <table>
+                <thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th></tr></thead>
+                <tbody id="tabela-produtos"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhum produto cadastrado.</td></tr></tbody>
+            </table>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal de Clientes -->
-  <div class="modal-overlay" id="modal-cliente">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="card-title" style="margin: 0;">👥 Gerenciar Clientes</div>
-        <button class="modal-close" id="fechar-modal-cliente">&times;</button>
-      </div>
-
-      <form id="form-cliente" style="margin-bottom: 20px;">
-        <input type="text" id="c-nome" placeholder="Nome Completo" required>
-        <input type="email" id="c-email" placeholder="E-mail" required>
-        <input type="tel" id="c-telefone" placeholder="Telefone (opcional)">
-        <button type="submit" class="btn-primary">Cadastrar Cliente</button>
-      </form>
-
-      <hr style="border-color: var(--card-border); margin-bottom: 15px;">
-
-      <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-muted);">Clientes Cadastrados:</h3>
-      <div style="max-height: 200px; overflow-y: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr>
-              <th style="padding: 8px; font-size: 0.75rem;">ID</th>
-              <th style="padding: 8px; font-size: 0.75rem;">Nome</th>
-              <th style="padding: 8px; font-size: 0.75rem;">E-mail</th>
-              <th style="padding: 8px; font-size: 0.75rem;">Telefone</th>
-              <th style="padding: 8px; font-size: 0.75rem; text-align: center;">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabela-clientes"></tbody>
-        </table>
-      </div>
+    <!-- 3. Fornecedores -->
+    <div id="section-fornecedores" class="section-container">
+        <div class="main-card">
+            <h3>🏢 Cadastrar Fornecedor</h3>
+            <form onsubmit="cadastrarItem(event, 'fornecedores')">
+                <div class="form-row">
+                    <div class="form-group"><label>Razão Social</label><input type="text" id="forn-nome" class="form-control" required></div>
+                    <div class="form-group"><label>CNPJ / CPF</label><input type="text" id="forn-doc" class="form-control" required></div>
+                    <div class="form-group"><label>Contato</label><input type="text" id="forn-contato" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Fornecedor</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Fornecedores Cadastrados</h3>
+            <table>
+                <thead><tr><th>Nome</th><th>Documento</th><th>Contato</th></tr></thead>
+                <tbody id="tabela-fornecedores"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhum fornecedor cadastrado.</td></tr></tbody>
+            </table>
+        </div>
     </div>
-  </div>
 
-  <!-- Modal Relatórios / Ajustes -->
-  <div class="modal-overlay" id="modal-info">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="card-title" id="titulo-modal-info" style="margin: 0;">ℹ️ Informação</div>
-        <button class="modal-close" id="fechar-modal-info">&times;</button>
-      </div>
-      <p id="texto-modal-info" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;"></p>
+    <!-- 4. Funcionários -->
+    <div id="section-funcionarios" class="section-container">
+        <div class="main-card">
+            <h3>👨‍💼 Cadastrar Funcionário</h3>
+            <form onsubmit="cadastrarItem(event, 'funcionarios')">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome Completo</label><input type="text" id="func-nome" class="form-control" required></div>
+                    <div class="form-group"><label>Cargo</label><input type="text" id="func-cargo" class="form-control" required></div>
+                    <div class="form-group"><label>Telefone</label><input type="text" id="func-tel" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Funcionário</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Funcionários Cadastrados</h3>
+            <table>
+                <thead><tr><th>Nome</th><th>Cargo</th><th>Telefone</th></tr></thead>
+                <tbody id="tabela-funcionarios"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhum funcionário cadastrado.</td></tr></tbody>
+            </table>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const API_URL = 'http://localhost:3000';
+    <!-- 5. Categorias -->
+    <div id="section-categorias" class="section-container">
+        <div class="main-card">
+            <h3>🗂️ Cadastrar Categoria</h3>
+            <form onsubmit="cadastrarItem(event, 'categorias')">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome da Categoria</label><input type="text" id="cat-nome" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Categoria</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Categorias Cadastradas</h3>
+            <table>
+                <thead><tr><th>Nome</th></tr></thead>
+                <tbody id="tabela-categorias"><tr><td style="text-align: center; color: #64748b;">Nenhuma categoria cadastrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-    document.getElementById('btn-novo-produto').addEventListener('click', () => {
-      document.getElementById('card-produto').scrollIntoView({ behavior: 'smooth' });
-      document.getElementById('p-nome').focus();
-    });
+    <!-- 6. Marcas -->
+    <div id="section-marcas" class="section-container">
+        <div class="main-card">
+            <h3>🏷️ Cadastrar Marca</h3>
+            <form onsubmit="cadastrarItem(event, 'marcas')">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome da Marca</label><input type="text" id="marca-nome" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Marca</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Marcas Cadastradas</h3>
+            <table>
+                <thead><tr><th>Nome</th></tr></thead>
+                <tbody id="tabela-marcas"><tr><td style="text-align: center; color: #64748b;">Nenhuma marca cadastrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-    document.getElementById('btn-nova-venda').addEventListener('click', () => {
-      document.getElementById('card-venda').scrollIntoView({ behavior: 'smooth' });
-      document.getElementById('v-id').focus();
-    });
+    <!-- 7. Vendas -->
+    <div id="section-vendas" class="section-container">
+        <div class="main-card">
+            <h3>🛍️ Registrar Venda</h3>
+            <form onsubmit="registrarVenda(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Cliente</label><select id="venda-cliente" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Produto</label><select id="venda-produto" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Quantidade</label><input type="number" id="venda-qtd" class="form-control" value="1" min="1" required></div>
+                    <div class="form-group"><label>Valor Total (R$)</label><input type="number" step="0.01" id="venda-valor" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Finalizar Venda</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Vendas Realizadas</h3>
+            <table>
+                <thead><tr><th>Cliente</th><th>Produto</th><th>Qtd</th><th>Total</th></tr></thead>
+                <tbody id="tabela-vendas"><tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma venda registrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-    document.getElementById('btn-estoque').addEventListener('click', () => {
-      document.getElementById('secao-estoque').scrollIntoView({ behavior: 'smooth' });
-    });
+    <!-- 8. Compras -->
+    <div id="section-compras" class="section-container">
+        <div class="main-card">
+            <h3>🛒 Registrar Compra (Reposição)</h3>
+            <form onsubmit="registrarCompra(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Fornecedor</label><select id="compra-fornecedor" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Produto</label><select id="compra-produto" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Quantidade</label><input type="number" id="compra-qtd" class="form-control" value="1" min="1" required></div>
+                    <div class="form-group"><label>Custo Total (R$)</label><input type="number" step="0.01" id="compra-valor" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Finalizar Compra</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Compras Realizadas</h3>
+            <table>
+                <thead><tr><th>Fornecedor</th><th>Produto</th><th>Qtd</th><th>Custo</th></tr></thead>
+                <tbody id="tabela-compras"><tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma compra registrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-    // Funções de Clientes
-    const modalCliente = document.getElementById('modal-cliente');
-    
-    async function carregarClientes() {
-      try {
-        const res = await fetch(`${API_URL}/clientes`);
-        const clientes = await res.json();
-        const tbody = document.getElementById('tabela-clientes');
-        tbody.innerHTML = '';
+    <!-- 9. Estoque -->
+    <div id="section-estoque" class="section-container">
+        <div class="main-card">
+            <h3>🔄 Ajuste Manual de Estoque</h3>
+            <form onsubmit="ajustarEstoque(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Produto</label><select id="estoque-produto" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Tipo de Movimento</label><select id="estoque-tipo" class="form-control" required><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div>
+                    <div class="form-group"><label>Quantidade</label><input type="number" id="estoque-qtd" class="form-control" min="1" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Atualizar Estoque</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Histórico de Movimentações de Estoque</h3>
+            <table>
+                <thead><tr><th>Produto</th><th>Tipo</th><th>Quantidade</th></tr></thead>
+                <tbody id="tabela-estoque"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhuma movimentação avulsa.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
 
-        if (!Array.isArray(clientes) || clientes.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 10px;">Nenhum cliente cadastrado.</td></tr>`;
-          return;
+    <!-- 10. Trocas e Devoluções -->
+    <div id="section-trocas" class="section-container">
+        <div class="main-card">
+            <h3>↩️ Registrar Troca ou Devolução</h3>
+            <form onsubmit="registrarTroca(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Cliente</label><select id="troca-cliente" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Produto Envolvido</label><select id="troca-produto" class="form-control" required><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Motivo</label><input type="text" id="troca-motivo" class="form-control" placeholder="Ex: Defeito, Tamanho" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Registrar Ocorrência</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Histórico de Trocas e Devoluções</h3>
+            <table>
+                <thead><tr><th>Cliente</th><th>Produto</th><th>Motivo</th></tr></thead>
+                <tbody id="tabela-trocas"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhuma troca registrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 11. Caixa -->
+    <div id="section-caixa" class="section-container">
+        <div class="summary-cards">
+            <div class="sum-card"><h4>Saldo em Caixa</h4><p id="caixa-saldo">R$ 0,00</p></div>
+        </div>
+        <div class="main-card">
+            <h3>💵 Lançamento Avulso no Caixa</h3>
+            <form onsubmit="lancarCaixa(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Descrição</label><input type="text" id="caixa-desc" class="form-control" required></div>
+                    <div class="form-group"><label>Tipo</label><select id="caixa-tipo" class="form-control"><option value="Entrada">Entrada (Suprimento)</option><option value="Saída">Saída (Sangria)</option></select></div>
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" step="0.01" id="caixa-valor" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Lançar no Caixa</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Movimentações do Caixa</h3>
+            <table>
+                <thead><tr><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead>
+                <tbody id="tabela-caixa"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhuma movimentação de caixa.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 12. Contas a Pagar -->
+    <div id="section-pagar" class="section-container">
+        <div class="main-card">
+            <h3>📤 Lançar Conta a Pagar</h3>
+            <form onsubmit="adicionarContaPagar(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Descrição da Despesa</label><input type="text" id="pagar-desc" class="form-control" placeholder="Ex: Fornecedor, Aluguel" required></div>
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" step="0.01" id="pagar-valor" class="form-control" placeholder="150.00" required></div>
+                    <div class="form-group"><label>Data de Vencimento</label><input type="date" id="pagar-data" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Conta a Pagar</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Contas a Pagar Registradas</h3>
+            <table>
+                <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+                <tbody id="tabela-pagar"><tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma conta a pagar cadastrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 13. Contas a Receber -->
+    <div id="section-receber" class="section-container">
+        <div class="main-card">
+            <h3>📥 Lançar Conta a Receber</h3>
+            <form onsubmit="adicionarContaReceber(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Origem / Cliente</label><input type="text" id="receber-desc" class="form-control" placeholder="Ex: Venda Direta / Cliente X" required></div>
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" step="0.01" id="receber-valor" class="form-control" placeholder="300.00" required></div>
+                    <div class="form-group"><label>Data de Recebimento</label><input type="date" id="receber-data" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Conta a Receber</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Contas a Receber Registradas</h3>
+            <table>
+                <thead><tr><th>Descrição</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
+                <tbody id="tabela-receber"><tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma conta a receber cadastrada.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 14. Crediário -->
+    <div id="section-crediario" class="section-container">
+        <div class="main-card">
+            <h3>💳 Registrar Crediário (Venda Parcelada)</h3>
+            <form onsubmit="adicionarCrediario(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome do Cliente</label><input type="text" id="cred-cliente" class="form-control" placeholder="Ex: João da Silva" required></div>
+                    <div class="form-group"><label>Valor Total (R$)</label><input type="number" step="0.01" id="cred-valor" class="form-control" placeholder="600.00" required></div>
+                    <div class="form-group"><label>Quantidade de Parcelas</label><input type="number" id="cred-parcelas" class="form-control" placeholder="3" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Gerar Crediário</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Crediários Ativos</h3>
+            <table>
+                <thead><tr><th>Cliente</th><th>Valor Total</th><th>Parcelas</th><th>Situação</th></tr></thead>
+                <tbody id="tabela-crediario"><tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhum crediário registrado.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 15. Fluxo de Caixa -->
+    <div id="section-fluxo" class="section-container">
+        <div class="summary-cards">
+            <div class="sum-card"><h4>Total Entradas</h4><p id="fluxo-entradas">R$ 0,00</p></div>
+            <div class="sum-card"><h4>Total Saídas</h4><p id="fluxo-saidas">R$ 0,00</p></div>
+            <div class="sum-card"><h4>Saldo Líquido</h4><p id="fluxo-saldo">R$ 0,00</p></div>
+        </div>
+        <div class="main-card">
+            <h3>📈 Extrato do Fluxo de Caixa</h3>
+            <table>
+                <thead><tr><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead>
+                <tbody id="tabela-fluxo"><tr><td colspan="3" style="text-align: center; color: #64748b;">Sem movimentações registradas.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 16. Gestão -->
+    <div id="section-gestao" class="section-container">
+        <div class="summary-cards">
+            <div class="sum-card"><h4>Total Clientes</h4><p id="gestao-clientes">0</p></div>
+            <div class="sum-card"><h4>Total Produtos</h4><p id="gestao-produtos">0</p></div>
+            <div class="sum-card"><h4>Total Vendas</h4><p id="gestao-vendas">R$ 0,00</p></div>
+        </div>
+        <div class="main-card">
+            <h3>📊 Painel de Indicadores de Gestão</h3>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 10px;">Visão executiva consolida o desempenho operacional do negócio com base nos cadastros e movimentações ativas.</p>
+            <table>
+                <thead><tr><th>Métrica Gerencial</th><th>Valor Consolidado</th></tr></thead>
+                <tbody>
+                    <tr><td>Total de Clientes Ativos</td><td id="g-cli">0</td></tr>
+                    <tr><td>Volume de Produtos Cadastrados</td><td id="g-prod">0</td></tr>
+                    <tr><td>Total Faturado em Vendas</td><td id="g-vendas">R$ 0,00</td></tr>
+                    <tr><td>Total Investido em Compras</td><td id="g-compras">R$ 0,00</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 17. Relatórios -->
+    <div id="section-relatorios" class="section-container">
+        <div class="main-card">
+            <h3>📑 Central de Relatórios</h3>
+            <div class="form-row">
+                <div class="form-group"><label>Tipo de Relatório</label><select id="rel-tipo" class="form-control"><option value="vendas">Relatório de Vendas</option><option value="financeiro">Relatório Financeiro</option><option value="estoque">Relatório de Estoque</option></select></div>
+            </div>
+            <button type="button" class="btn-submit" onclick="gerarRelatorio()">Gerar Relatório na Tela</button>
+        </div>
+        <div class="main-card">
+            <h3>Resultado do Relatório</h3>
+            <table>
+                <thead><tr><th>Informação / Descrição</th><th>Detalhes / Valor</th></tr></thead>
+                <tbody id="tabela-relatorios"><tr><td colspan="2" style="text-align: center; color: #64748b;">Nenhum relatório gerado.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 18. Dashboard -->
+    <div id="section-dashboard" class="section-container">
+        <div class="summary-cards">
+            <div class="sum-card"><h4>Faturamento Geral</h4><p id="dash-fat">R$ 0,00</p></div>
+            <div class="sum-card"><h4>Clientes Cadastrados</h4><p id="dash-cli">0</p></div>
+            <div class="sum-card"><h4>Itens em Estoque</h4><p id="dash-est">0</p></div>
+        </div>
+        <div class="main-card">
+            <h3>🏠 Visão Geral (Dashboard Executivo)</h3>
+            <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5;">Bem-vindo ao painel principal do CONTROLIS. Utilize os menus superiores para navegar entre os cadastros, realizar movimentações operacionais, acompanhar o fluxo financeiro e extrair relatórios gerenciais consolidados em tempo real.</p>
+        </div>
+    </div>
+
+    <!-- 19. Usuários e Permissões -->
+    <div id="section-usuarios" class="section-container">
+        <div class="main-card">
+            <h3>🔐 Cadastrar Novo Usuário</h3>
+            <form onsubmit="cadastrarUsuario(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome de Usuário</label><input type="text" id="user-nome" class="form-control" required></div>
+                    <div class="form-group"><label>E-mail</label><input type="email" id="user-email" class="form-control" required></div>
+                    <div class="form-group"><label>Perfil / Permissão</label><select id="user-perfil" class="form-control"><option value="Administrador">Administrador</option><option value="Operador">Operador</option><option value="Financeiro">Financeiro</option></select></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Usuário</button>
+            </form>
+        </div>
+        <div class="main-card">
+            <h3>Usuários do Sistema</h3>
+            <table>
+                <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th></tr></thead>
+                <tbody id="tabela-usuarios"><tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhum usuário cadastrado.</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 20. Configurações -->
+    <div id="section-configuracoes" class="section-container">
+        <div class="main-card">
+            <h3>⚙️ Configurações do Sistema</h3>
+            <form onsubmit="salvarConfiguracoes(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome da Empresa</label><input type="text" id="cfg-empresa" class="form-control" value="CONTROLIS Comércio Ltda" required></div>
+                    <div class="form-group"><label>Moeda Padrão</label><input type="text" id="cfg-moeda" class="form-control" value="BRL (R$)" required></div>
+                    <div class="form-group"><label>Tema do Sistema</label><select id="cfg-tema" class="form-control"><option value="Escuro">Escuro (Dark Neon)</option></select></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Configurações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let bancos = {
+            clientes: [],
+            produtos: [],
+            fornecedores: [],
+            funcionarios: [],
+            categorias: [],
+            marcas: [],
+            vendas: [],
+            compras: [],
+            estoque: [],
+            trocas: [],
+            caixa: [],
+            pagar: [],
+            receber: [],
+            crediario: [],
+            fluxo: [],
+            usuarios: []
+        };
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.card-action').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active'));
+
+            element.classList.add('active');
+            document.getElementById('section-' + tabName).classList.add('active');
+
+            if (['vendas', 'compras', 'estoque', 'trocas'].includes(tabName)) {
+                atualizarSelects();
+            }
+            if (tabName === 'fluxo' || tabName === 'caixa') {
+                atualizarCaixaEFluxo();
+            }
+            if (tabName === 'gestao') {
+                atualizarGestao();
+            }
+            if (tabName === 'dashboard') {
+                atualizarDashboard();
+            }
         }
 
-        clientes.forEach(c => {
-          tbody.innerHTML += `
-            <tr>
-              <td style="padding: 8px; color: var(--text-muted);">#${c.id}</td>
-              <td style="padding: 8px; font-weight: 600; color: #fff;">${c.nome}</td>
-              <td style="padding: 8px; color: var(--text-muted);">${c.email}</td>
-              <td style="padding: 8px; color: var(--text-muted);">${c.telefone || '-'}</td>
-              <td style="padding: 8px; text-align: center;">
-                <button class="btn-danger" onclick="excluirCliente(${c.id})">Excluir</button>
-              </td>
-            </tr>
-          `;
-        });
-      } catch (err) {
-        console.error("Erro ao carregar clientes", err);
-      }
-    }
+        function atualizarSelects() {
+            let selCli = document.getElementById('venda-cliente');
+            let selTrocaCli = document.getElementById('troca-cliente');
+            let htmlCli = '<option value="">Selecione...</option>' + bancos.clientes.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+            if (selCli) selCli.innerHTML = htmlCli;
+            if (selTrocaCli) selTrocaCli.innerHTML = htmlCli;
 
-    async function excluirCliente(id) {
-      if (confirm('Tem certeza que deseja excluir este cliente?')) {
-        try {
-          const res = await fetch(`${API_URL}/clientes/${id}`, { method: 'DELETE' });
-          if (res.ok) {
-            carregarClientes(); // Atualiza a tabela na mesma hora
-          } else {
-            alert('Erro ao excluir cliente.');
-          }
-        } catch (err) {
-          alert('Erro de conexão ao excluir.');
-        }
-      }
-    }
+            let selForn = document.getElementById('compra-fornecedor');
+            if (selForn) selForn.innerHTML = '<option value="">Selecione...</option>' + bancos.fornecedores.map(f => `<option value="${f.nome}">${f.nome}</option>`).join('');
 
-    document.getElementById('btn-clientes').addEventListener('click', () => {
-      modalCliente.style.display = 'flex';
-      carregarClientes();
-    });
+            let htmlProd = '<option value="">Selecione...</option>' + bancos.produtos.map(p => `<option value="${p.nome}">${p.nome} (Est: ${p.qtd})</option>`).join('');
+            let pVenda = document.getElementById('venda-produto');
+            let pCompra = document.getElementById('compra-produto');
+            let pEstoque = document.getElementById('estoque-produto');
+            let pTroca = document.getElementById('troca-produto');
 
-    document.getElementById('fechar-modal-cliente').addEventListener('click', () => {
-      modalCliente.style.display = 'none';
-    });
-
-    modalCliente.addEventListener('click', (e) => {
-      if (e.target === modalCliente) modalCliente.style.display = 'none';
-    });
-
-    document.getElementById('form-cliente').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const response = await fetch(`${API_URL}/clientes`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nome: document.getElementById('c-nome').value,
-            email: document.getElementById('c-email').value,
-            telefone: document.getElementById('c-telefone').value
-          })
-        });
-
-        if (response.ok) {
-          e.target.reset();
-          carregarClientes();
-        } else {
-          alert('Erro ao cadastrar cliente.');
-        }
-      } catch (err) {
-        alert('Erro ao conectar com a API.');
-      }
-    });
-
-    // Demais funções (Produtos e Vendas)
-    const modalInfo = document.getElementById('modal-info');
-    const tituloInfo = document.getElementById('titulo-modal-info');
-    const textoInfo = document.getElementById('texto-modal-info');
-
-    document.getElementById('btn-relatorios').addEventListener('click', async () => {
-      tituloInfo.innerText = '📑 Relatório do Sistema';
-      try {
-        const res = await fetch(`${API_URL}/relatorios/resumo`);
-        const data = await res.json();
-        textoInfo.innerHTML = `Total de Produtos: <b>${data.totalProdutos}</b><br>Total de Clientes: <b>${data.totalClientes}</b>`;
-      } catch (e) {
-        textoInfo.innerText = 'Painel de relatórios operando com dados locais.';
-      }
-      modalInfo.style.display = 'flex';
-    });
-
-    document.getElementById('btn-ajustes').addEventListener('click', () => {
-      tituloInfo.innerText = '⚙️ Ajustes do Sistema';
-      textoInfo.innerText = 'Sistema conectado à API local na porta 3000. Ambiente configurado para o Projeto Final SENAC.';
-      modalInfo.style.display = 'flex';
-    });
-
-    document.getElementById('fechar-modal-info').addEventListener('click', () => {
-      modalInfo.style.display = 'none';
-    });
-    modalInfo.addEventListener('click', (e) => {
-      if (e.target === modalInfo) modalInfo.style.display = 'none';
-    });
-
-    async function carregarProdutos() {
-      try {
-        const res = await fetch(`${API_URL}/produtos`);
-        const produtos = await res.json();
-        const tbody = document.getElementById('tabela-produtos');
-        tbody.innerHTML = '';
-
-        if (!Array.isArray(produtos) || produtos.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum produto cadastrado ainda.</td></tr>`;
-          return;
+            if (pVenda) pVenda.innerHTML = htmlProd;
+            if (pCompra) pCompra.innerHTML = htmlProd;
+            if (pEstoque) pEstoque.innerHTML = htmlProd;
+            if (pTroca) pTroca.innerHTML = htmlProd;
         }
 
-        produtos.forEach(p => {
-          tbody.innerHTML += `
-            <tr>
-              <td style="color: var(--text-muted);">#${p.id}</td>
-              <td style="font-weight: 700;">${p.nome}</td>
-              <td style="color: var(--primary); font-weight: 700;">R$ ${Number(p.preco).toFixed(2)}</td>
-              <td><span class="stock-badge">${p.quantidade} un</span></td>
-            </tr>
-          `;
-        });
-      } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
-      }
-    }
+        function cadastrarItem(event, tipo) {
+            event.preventDefault();
+            if (tipo === 'clientes') {
+                bancos.clientes.push({ nome: document.getElementById('cli-nome').value, email: document.getElementById('cli-email').value, tel: document.getElementById('cli-tel').value });
+            } else if (tipo === 'produtos') {
+                bancos.produtos.push({ nome: document.getElementById('prod-nome').value, preco: parseFloat(document.getElementById('prod-preco').value), qtd: parseInt(document.getElementById('prod-qtd').value) });
+            } else if (tipo === 'fornecedores') {
+                bancos.fornecedores.push({ nome: document.getElementById('forn-nome').value, doc: document.getElementById('forn-doc').value, contato: document.getElementById('forn-contato').value });
+            } else if (tipo === 'funcionarios') {
+                bancos.funcionarios.push({ nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, tel: document.getElementById('func-tel').value });
+            } else if (tipo === 'categorias') {
+                bancos.categorias.push({ nome: document.getElementById('cat-nome').value });
+            } else if (tipo === 'marcas') {
+                bancos.marcas.push({ nome: document.getElementById('marca-nome').value });
+            }
 
-    document.getElementById('form-produto').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const res = await fetch(`${API_URL}/produtos`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nome: document.getElementById('p-nome').value,
-            preco: parseFloat(document.getElementById('p-preco').value),
-            quantidade: parseInt(document.getElementById('p-qtd').value)
-          })
-        });
-        if (res.ok) {
-          alert('Produto cadastrado com sucesso!');
-          e.target.reset();
-          carregarProdutos();
-        } else {
-          alert('Erro ao cadastrar produto no servidor.');
+            alert('Cadastro realizado com sucesso!');
+            event.target.reset();
+            atualizarTabela(tipo);
         }
-      } catch (err) {
-        alert('Falha na requisição de cadastro.');
-      }
-    });
 
-    document.getElementById('form-venda').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const res = await fetch(`${API_URL}/vendas`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            produtoId: parseInt(document.getElementById('v-id').value),
-            quantidadeVendida: parseInt(document.getElementById('v-qtd').value)
-          })
-        });
-        
-        if (res.ok) {
-          alert('Venda realizada com sucesso!');
-          e.target.reset();
-          carregarProdutos();
-        } else {
-          alert('Erro ao realizar a venda.');
+        function atualizarTabela(tipo) {
+            const tbody = document.getElementById('tabela-' + tipo);
+            const itens = bancos[tipo];
+            if (itens.length === 0) return;
+
+            if (tipo === 'clientes') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td><td>${i.email}</td><td>${i.tel}</td></tr>`).join('');
+            else if (tipo === 'produtos') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td><td>R$ ${i.preco.toFixed(2)}</td><td>${i.qtd}</td></tr>`).join('');
+            else if (tipo === 'fornecedores') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td><td>${i.doc}</td><td>${i.contato}</td></tr>`).join('');
+            else if (tipo === 'funcionarios') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td><td>${i.cargo}</td><td>${i.tel}</td></tr>`).join('');
+            else if (tipo === 'categorias') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td></tr>`).join('');
+            else if (tipo === 'marcas') tbody.innerHTML = itens.map(i => `<tr><td>${i.nome}</td></tr>`).join('');
         }
-      } catch (err) {
-        alert('Erro de conexão ao realizar venda.');
-      }
-    });
 
-    carregarProdutos();
-  </script>
+        function registrarVenda(event) {
+            event.preventDefault();
+            const cliente = document.getElementById('venda-cliente').value;
+            const produto = document.getElementById('venda-produto').value;
+            const qtd = parseInt(document.getElementById('venda-qtd').value);
+            const valor = parseFloat(document.getElementById('venda-valor').value);
+
+            let prodObj = bancos.produtos.find(p => p.nome === produto);
+            if (prodObj) prodObj.qtd -= qtd;
+
+            bancos.vendas.push({ cliente, produto, qtd, valor });
+            bancos.caixa.push({ tipo: 'Entrada', desc: `Venda: ${produto} (${cliente})`, valor });
+            bancos.fluxo.push({ tipo: 'Entrada', desc: `Venda: ${produto}`, valor });
+
+            alert('Venda realizada e integrada ao caixa e fluxo!');
+            event.target.reset();
+            document.getElementById('tabela-vendas').innerHTML = bancos.vendas.map(v => `<tr><td>${v.cliente}</td><td>${v.produto}</td><td>${v.qtd}</td><td>R$ ${v.valor.toFixed(2)}</td></tr>`).join('');
+            atualizarCaixaEFluxo();
+        }
+
+        function registrarCompra(event) {
+            event.preventDefault();
+            const fornecedor = document.getElementById('compra-fornecedor').value;
+            const produto = document.getElementById('compra-produto').value;
+            const qtd = parseInt(document.getElementById('compra-qtd').value);
+            const valor = parseFloat(document.getElementById('compra-valor').value);
+
+            let prodObj = bancos.produtos.find(p => p.nome === produto);
+            if (prodObj) prodObj.qtd += qtd;
+
+            bancos.compras.push({ fornecedor, produto, qtd, valor });
+            bancos.caixa.push({ tipo: 'Saída', desc: `Compra Reposição: ${produto}`, valor });
+            bancos.fluxo.push({ tipo: 'Saída', desc: `Compra: ${produto}`, valor });
+
+            alert('Compra registrada, estoque atualizado e fluxo lançado!');
+            event.target.reset();
+            document.getElementById('tabela-compras').innerHTML = bancos.compras.map(c => `<tr><td>${c.fornecedor}</td><td>${c.produto}</td><td>${c.qtd}</td><td>R$ ${c.valor.toFixed(2)}</td></tr>`).join('');
+            atualizarCaixaEFluxo();
+        }
+
+        function ajustarEstoque(event) {
+            event.preventDefault();
+            const produto = document.getElementById('estoque-produto').value;
+            const tipo = document.getElementById('estoque-tipo').value;
+            const qtd = parseInt(document.getElementById('estoque-qtd').value);
+
+            let prodObj = bancos.produtos.find(p => p.nome === produto);
+            if (prodObj) {
+                if (tipo === 'Entrada') prodObj.qtd += qtd;
+                else prodObj.qtd = Math.max(0, prodObj.qtd - qtd);
+            }
+
+            bancos.estoque.push({ produto, tipo, qtd });
+            alert('Estoque ajustado com sucesso!');
+            event.target.reset();
+            document.getElementById('tabela-estoque').innerHTML = bancos.estoque.map(e => `<tr><td>${e.produto}</td><td><span style="color:${e.tipo==='Entrada'?'#4ade80':'#f87171'}">${e.tipo}</span></td><td>${e.qtd}</td></tr>`).join('');
+        }
+
+        function registrarTroca(event) {
+            event.preventDefault();
+            const cliente = document.getElementById('troca-cliente').value;
+            const produto = document.getElementById('troca-produto').value;
+            const motivo = document.getElementById('troca-motivo').value;
+
+            bancos.trocas.push({ cliente, produto, motivo });
+            alert('Ocorrência de troca registrada!');
+            event.target.reset();
+            document.getElementById('tabela-trocas').innerHTML = bancos.trocas.map(t => `<tr><td>${t.cliente}</td><td>${t.produto}</td><td>${t.motivo}</td></tr>`).join('');
+        }
+
+        function lancarCaixa(event) {
+            event.preventDefault();
+            const desc = document.getElementById('caixa-desc').value;
+            const tipo = document.getElementById('caixa-tipo').value;
+            const valor = parseFloat(document.getElementById('caixa-valor').value);
+
+            bancos.caixa.push({ tipo, desc, valor });
+            bancos.fluxo.push({ tipo, desc, valor });
+            alert('Lançamento efetuado!');
+            event.target.reset();
+            atualizarCaixaEFluxo();
+        }
+
+        function adicionarContaPagar(event) {
+            event.preventDefault();
+            const desc = document.getElementById('pagar-desc').value;
+            const valor = parseFloat(document.getElementById('pagar-valor').value);
+            const data = document.getElementById('pagar-data').value;
+
+            bancos.pagar.push({ desc, valor, data, status: 'Pendente' });
+            bancos.fluxo.push({ tipo: 'Saída', desc: 'Pgto: ' + desc, valor });
+            alert('Conta a pagar lançada com sucesso!');
+            event.target.reset();
+            document.getElementById('tabela-pagar').innerHTML = bancos.pagar.map(cp => `
+                <tr>
+                    <td>${cp.desc}</td>
+                    <td>R$ ${cp.valor.toFixed(2)}</td>
+                    <td>${cp.data}</td>
+                    <td><span style="color: #f87171;">${cp.status}</span></td>
+                </tr>
+            `).join('');
+            atualizarCaixaEFluxo();
+        }
+
+        function adicionarContaReceber(event) {
+            event.preventDefault();
+            const desc = document.getElementById('receber-desc').value;
+            const valor = parseFloat(document.getElementById('receber-valor').value);
+            const data = document.getElementById('receber-data').value;
+
+            bancos.receber.push({ desc, valor, data, status: 'Recebido' });
+            bancos.fluxo.push({ tipo: 'Entrada', desc: 'Recebimento: ' + desc, valor });
+            alert('Conta a receber lançada com sucesso!');
+            event.target.reset();
+            document.getElementById('tabela-receber').innerHTML = bancos.receber.map(cr => `
+                <tr>
+                    <td>${cr.desc}</td>
+                    <td>R$ ${cr.valor.toFixed(2)}</td>
+                    <td>${cr.data}</td>
+                    <td><span style="color: #4ade80;">${cr.status}</span></td>
+                </tr>
+            `).join('');
+            atualizarCaixaEFluxo();
+        }
+
+        function adicionarCrediario(event) {
+            event.preventDefault();
+            const cliente = document.getElementById('cred-cliente').value;
+            const valor = parseFloat(document.getElementById('cred-valor').value);
+            const parcelas = parseInt(document.getElementById('cred-parcelas').value);
+
+            bancos.crediario.push({ cliente, valor, parcelas, status: 'Em aberto' });
+            bancos.fluxo.push({ tipo: 'Entrada', desc: `Crediário (Entrada): ${cliente}`, valor: valor / parcelas });
+
+            alert('Crediário registrado com sucesso!');
+            event.target.reset();
+            document.getElementById('tabela-crediario').innerHTML = bancos.crediario.map(c => `
+                <tr>
+                    <td>${c.cliente}</td>
+                    <td>R$ ${c.valor.toFixed(2)}</td>
+                    <td>${c.parcelas}x</td>
+                    <td><span style="color: #facc15;">${c.status}</span></td>
+                </tr>
+            `).join('');
+            atualizarCaixaEFluxo();
+        }
+
+        function cadastrarUsuario(event) {
+            event.preventDefault();
+            const nome = document.getElementById('user-nome').value;
+            const email = document.getElementById('user-email').value;
+            const perfil = document.getElementById('user-perfil').value;
+
+            bancos.usuarios.push({ nome, email, perfil });
+            alert('Usuário cadastrado com sucesso!');
+            event.target.reset();
+            document.getElementById('tabela-usuarios').innerHTML = bancos.usuarios.map(u => `
+                <tr>
+                    <td>${u.nome}</td>
+                    <td>${u.email}</td>
+                    <td>${u.perfil}</td>
+                </tr>
+            `).join('');
+        }
+
+        function salvarConfiguracoes(event) {
+            event.preventDefault();
+            alert('Configurações salvas com sucesso!');
+        }
+
+        function gerarRelatorio() {
+            const tipo = document.getElementById('rel-tipo').value;
+            const tbody = document.getElementById('tabela-relatorios');
+            
+            if (tipo === 'vendas') {
+                if (bancos.vendas.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #64748b;">Nenhuma venda para exibir no relatório.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = bancos.vendas.map(v => `<tr><td>Venda para ${v.cliente} (${v.produto} - ${v.qtd} un)</td><td>R$ ${v.valor.toFixed(2)}</td></tr>`).join('');
+            } else if (tipo === 'financeiro') {
+                let totalEntradas = bancos.fluxo.filter(m => m.tipo === 'Entrada').reduce((acc, m) => acc + m.valor, 0);
+                let totalSaidas = bancos.fluxo.filter(m => m.tipo === 'Saída').reduce((acc, m) => acc + m.valor, 0);
+                tbody.innerHTML = `
+                    <tr><td>Total de Entradas Consolidadas</td><td style="color: #4ade80;">R$ ${totalEntradas.toFixed(2)}</td></tr>
+                    <tr><td>Total de Saídas Consolidadas</td><td style="color: #f87171;">R$ ${totalSaidas.toFixed(2)}</td></tr>
+                    <tr><td>Saldo Líquido Geral</td><td style="color: #38bdf8; font-weight: bold;">R$ ${(totalEntradas - totalSaidas).toFixed(2)}</td></tr>
+                `;
+            } else if (tipo === 'estoque') {
+                if (bancos.produtos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #64748b;">Nenhum produto cadastrado.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = bancos.produtos.map(p => `<tr><td>Produto: ${p.nome}</td><td>Estoque Atual: ${p.qtd} unidades</td></tr>`).join('');
+            }
+        }
+
+        function atualizarGestao() {
+            let totalVendasVal = bancos.vendas.reduce((acc, v) => acc + v.valor, 0);
+            let totalComprasVal = bancos.compras.reduce((acc, c) => acc + c.valor, 0);
+
+            document.getElementById('gestao-clientes').innerText = bancos.clientes.length;
+            document.getElementById('gestao-produtos').innerText = bancos.produtos.length;
+            document.getElementById('gestao-vendas').innerText = `R$ ${totalVendasVal.toFixed(2)}`;
+
+            document.getElementById('g-cli').innerText = bancos.clientes.length;
+            document.getElementById('g-prod').innerText = bancos.produtos.length;
+            document.getElementById('g-vendas').innerText = `R$ ${totalVendasVal.toFixed(2)}`;
+            document.getElementById('g-compras').innerText = `R$ ${totalComprasVal.toFixed(2)}`;
+        }
+
+        function atualizarDashboard() {
+            let totalVendasVal = bancos.vendas.reduce((acc, v) => acc + v.valor, 0);
+            let totalEstoqueQtd = bancos.produtos.reduce((acc, p) => acc + p.qtd, 0);
+
+            document.getElementById('dash-fat').innerText = `R$ ${totalVendasVal.toFixed(2)}`;
+            document.getElementById('dash-cli').innerText = bancos.clientes.length;
+            document.getElementById('dash-est').innerText = totalEstoqueQtd;
+        }
+
+        function atualizarCaixaEFluxo() {
+            let totalEntradas = bancos.fluxo.filter(m => m.tipo === 'Entrada').reduce((acc, m) => acc + m.valor, 0);
+            let totalSaidas = bancos.fluxo.filter(m => m.tipo === 'Saída').reduce((acc, m) => acc + m.valor, 0);
+            let saldo = totalEntradas - totalSaidas;
+
+            document.getElementById('caixa-saldo').innerText = `R$ ${saldo.toFixed(2)}`;
+            document.getElementById('fluxo-entradas').innerText = `R$ ${totalEntradas.toFixed(2)}`;
+            document.getElementById('fluxo-saidas').innerText = `R$ ${totalSaidas.toFixed(2)}`;
+            document.getElementById('fluxo-saldo').innerText = `R$ ${saldo.toFixed(2)}`;
+
+            let htmlCaixa = bancos.caixa.length === 0 ? `<tr><td colspan="3" style="text-align: center; color: #64748b;">Nenhuma movimentação.</td></tr>` : 
+                bancos.caixa.map(m => `<tr><td><span style="color:${m.tipo==='Entrada'?'#4ade80':'#f87171'}">${m.tipo}</span></td><td>${m.desc}</td><td>R$ ${m.valor.toFixed(2)}</td></tr>`).join('');
+            document.getElementById('tabela-caixa').innerHTML = htmlCaixa;
+
+            let htmlFluxo = bancos.fluxo.length === 0 ? `<tr><td colspan="3" style="text-align: center; color: #64748b;">Sem movimentações.</td></tr>` : 
+                bancos.fluxo.map(m => `<tr><td><span style="color:${m.tipo==='Entrada'?'#4ade80':'#f87171'}">${m.tipo}</span></td><td>${m.desc}</td><td>R$ ${m.valor.toFixed(2)}</td></tr>`).join('');
+            document.getElementById('tabela-fluxo').innerHTML = htmlFluxo;
+        }
+    </script>
 </body>
 </html>

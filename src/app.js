@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 /* ==========================================
-   MÓDULO 1: PRODUTOS & VENDAS (Existente/Ajustado)
+   MÓDULO 1: PRODUTOS & VENDAS (Ajustado para não duplicar)
    ========================================== */
 app.get('/produtos', async (req, res) => {
     res.json(await Produto.findAll());
@@ -17,8 +17,26 @@ app.get('/produtos', async (req, res) => {
 
 app.post('/produtos', async (req, res) => {
     try {
-        res.status(201).json(await Produto.create(req.body));
-    } catch (e) { res.status(400).json({ error: e.message }); }
+        const { nome, preco, quantidade } = req.body;
+
+        // 1. Verifica se já existe um produto com o mesmo nome no banco
+        let produtoExistente = await Produto.findOne({ where: { nome } });
+
+        if (produtoExistente) {
+            // 2. Se já existe, atualiza a quantidade somando ao estoque atual e atualiza o preço
+            produtoExistente.quantidade = Number(produtoExistente.quantidade) + Number(quantidade || 0);
+            produtoExistente.preco = preco || produtoExistente.preco;
+            await produtoExistente.save();
+            
+            return res.json({ message: 'Produto já cadastrado. Estoque atualizado com sucesso!', produto: produtoExistente });
+        } else {
+            // 3. Se não existe, cria um novo normalmente
+            const novoProduto = await Produto.create(req.body);
+            return res.status(201).json(novoProduto);
+        }
+    } catch (e) { 
+        res.status(400).json({ error: e.message }); 
+    }
 });
 
 app.post('/vendas', async (req, res) => {
